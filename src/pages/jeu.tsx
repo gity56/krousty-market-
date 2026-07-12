@@ -26,7 +26,7 @@ const prizes: Prize[] = [
 
 const referenceWheelColors = ['#ec1479', '#050505', '#28aeea', '#ffffff'];
 
-const GOOGLE_MAPS_URL = import.meta.env.VITE_GOOGLE_MAPS_URL || 'https://g.page/r/CcfZNj_s6Sy7EBM/review';
+const GOOGLE_MAPS_URL = 'https://g.page/r/CcfZNj_s6Sy7EBM/review';
 
 const SpinWheel = () => {
   const [rotation, setRotation] = useState(0);
@@ -73,11 +73,11 @@ const SpinWheel = () => {
 
     const prizeIndex = prizes.findIndex(p => p.name === selectedPrize.name);
     const segmentAngle = 360 / prizes.length;
-    const segmentCenterAngle = prizeIndex * segmentAngle + (segmentAngle / 2);
-    const targetAngle = -segmentCenterAngle;
+    const sliceCenterAngle = -90 + (prizeIndex * segmentAngle);
+    const targetAngle = ((-sliceCenterAngle - (rotation % 360)) + 360) % 360;
     const baseSpins = selectedPrize.probability > 10 ? 5 : selectedPrize.probability > 2 ? 7 : 10;
     const extraRotation = baseSpins * 360;
-    const finalRotation = rotation + extraRotation + targetAngle - (rotation % 360);
+    const finalRotation = rotation + extraRotation + targetAngle;
 
     setRotation(finalRotation);
 
@@ -200,7 +200,7 @@ const SpinWheel = () => {
             </div>
           </motion.div>
 
-          <div className="wheel-selection-arrow" aria-hidden="true" />
+          <div className="wheel-selection-marker" aria-hidden="true">-</div>
           <motion.button
             type="button"
             className="wheel-spin-cta"

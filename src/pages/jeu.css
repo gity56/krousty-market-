@@ -1,6 +1,8 @@
 @font-face {
   font-family: 'Happy School';
-  src: url('/happy_school/Happy%20School.otf') format('opentype');
+  src:
+    url('/happy_school/Happy%20School.ttf') format('truetype'),
+    url('/happy_school/Happy%20School.otf') format('opentype');
   font-display: swap;
 }
 
@@ -114,15 +116,16 @@
   width: 100%;
   margin-top: -8px;
   color: #fff;
-  font-size: clamp(30px, 3.6vw, 48px) !important;
+  font-size: clamp(38px, 4.5vw, 62px) !important;
   font-weight: 700;
   letter-spacing: .02em;
+  line-height: .98;
   text-shadow: 0 2px 12px #000;
 }
 
 .wheel-stage {
   position: absolute;
-  top: 59%;
+  top: 66%;
   left: 0;
   width: 100%;
   height: 440px;
@@ -155,7 +158,7 @@
 .wheel-light-pink { top: -20px; background: rgba(236, 20, 121, .75); }
 .wheel-light-blue { top: 70px; left: -110px; background: rgba(40, 174, 234, .65); }
 
-.wheel-selection-arrow {
+.wheel-selection-marker {
   position: absolute;
   z-index: 4;
   top: 50%;
@@ -177,10 +180,6 @@
     0 0 22px #ec1479;
 }
 
-.wheel-selection-arrow::before {
-  content: '-';
-}
-
 .wheel-spin-cta {
   position: absolute;
   z-index: 5;
@@ -195,7 +194,7 @@
   box-shadow: 0 0 0 5px #050505, 0 0 28px rgba(236, 20, 121, .65);
   color: #fff;
   cursor: pointer;
-  font-size: clamp(19px, 2vw, 27px);
+  font-size: clamp(24px, 2.7vw, 36px);
   font-weight: 900;
   letter-spacing: .03em;
   text-transform: uppercase;
@@ -267,10 +266,10 @@
 
 .reference-spin-option span {
   position: relative;
-  width: 82%;
+  width: 90%;
   overflow: hidden;
   color: #fff;
-  font-size: clamp(22px, 2.2vw, 30px);
+  font-size: clamp(26px, 2.8vw, 39px);
   font-weight: 900;
   line-height: 1.05;
   text-align: center;
@@ -481,8 +480,8 @@
 @media (max-width: 640px) {
   .game-brand { top: 12px; }
   .game-brand-logo { width: 155px; }
-  .game-brand p { max-width: 380px; margin-top: -10px; font-size: 27px !important; }
-  .wheel-stage { top: 64%; height: min(92vw, 440px); }
+  .game-brand p { max-width: 390px; margin-top: -10px; font-size: 33px !important; }
+  .wheel-stage { top: 71%; height: min(92vw, 440px); }
 
   .reference-spin-container {
     width: min(92vw, 440px);
@@ -492,23 +491,23 @@
 
   .wheel-stage .reference-spin-container { left: calc(min(92vw, 440px) / -2); }
   .wheel-light { left: -190px; width: 360px; height: 360px; }
-  .wheel-selection-arrow {
+  .wheel-selection-marker {
     left: calc(min(92vw, 440px) / 2 - 20px);
     width: 34px;
     height: 34px;
-    font-size: 74px;
+    font-size: 82px;
   }
   .wheel-spin-cta {
     left: calc(min(92vw, 440px) / 2 + 48px);
     min-width: 0;
-    width: min(40vw, 165px);
+    width: min(42vw, 185px);
     padding: 11px 9px;
-    font-size: clamp(16px, 4.6vw, 20px);
+    font-size: clamp(20px, 5.4vw, 25px);
   }
 
   .reference-spin-option span {
-    width: 88%;
-    font-size: clamp(16px, 4.7vw, 23px);
+    width: 92%;
+    font-size: clamp(19px, 5.3vw, 29px);
   }
 
   .game-modal-title {
