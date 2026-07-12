@@ -224,49 +224,52 @@ const SpinWheel = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-black/80 backdrop-blur-lg flex items-center justify-center z-40 p-4"
+              className="game-modal-overlay z-40"
             >
               <motion.div
                 initial={{ y: 30, scale: 0.96, opacity: 0 }}
                 animate={{ y: 0, scale: 1, opacity: 1 }}
                 exit={{ y: 30, scale: 0.96, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 220, damping: 22 }}
-                className="w-full max-w-xl bg-white text-gray-950 rounded-[28px] shadow-2xl p-6 sm:p-8 text-center"
+                className="game-modal-card game-review-modal"
               >
-                <h2 className="text-3xl sm:text-5xl font-black mb-6 leading-tight">
+                <span className="game-modal-smile game-modal-smile-one" aria-hidden="true">a</span>
+                <span className="game-modal-smile game-modal-smile-two" aria-hidden="true">f</span>
+
+                <h2 className="game-modal-title">
                   Ouvrez Google Maps pour debloquer la roue
                 </h2>
 
-                <div className="bg-gray-100 rounded-2xl p-4 mb-5">
-                  <p className="text-lg sm:text-2xl font-black text-purple-700">
+                <div className="game-modal-panel">
+                  <p>
                     Cliquez sur le lien, puis revenez ici pour tourner la roue.
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="game-modal-actions">
                   <a
                     href={GOOGLE_MAPS_URL}
                     target="_blank"
                     rel="noreferrer"
                     onClick={handleMapsClick}
-                    className="flex-1 px-5 py-4 rounded-full font-black text-white shadow-lg transition bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-emerald-800"
+                    className="game-modal-primary"
                   >
                     Ouvrir Google Maps
                   </a>
                   <button
                     type="button"
                     onClick={() => setReviewPopupOpen(false)}
-                    className="px-5 py-4 rounded-full font-black bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
+                    className="game-modal-secondary"
                   >
                     Plus tard
                   </button>
                 </div>
 
-                <div className="min-h-[40px] mt-5 text-sm font-semibold">
+                <div className="game-modal-note">
                   {linkOpened ? (
-                    <p className="text-purple-700">Lien ouvert. La roue est debloquee.</p>
+                    <p>Lien ouvert. La roue est debloquee.</p>
                   ) : (
-                    <p className="text-gray-600">La roue se debloque des que vous cliquez sur Google Maps.</p>
+                    <p>La roue se debloque des que vous cliquez sur Google Maps.</p>
                   )}
                 </div>
               </motion.div>
@@ -281,7 +284,7 @@ const SpinWheel = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="absolute inset-0 bg-black/85 backdrop-blur-lg flex items-center justify-center z-30 p-4"
+              className="game-modal-overlay z-30"
               onClick={closeResult}
             >
               <motion.div
@@ -294,13 +297,13 @@ const SpinWheel = () => {
                   damping: 20,
                   duration: 0.6
                 }}
-                className="bg-gradient-to-br from-yellow-400 via-orange-400 to-pink-500 p-8 sm:p-12 md:p-16 rounded-3xl shadow-2xl text-center max-w-sm sm:max-w-2xl mx-4 relative"
+                className="game-modal-card game-result-modal"
                 onClick={(e) => e.stopPropagation()}
               >
                 {[...Array(8)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute text-3xl sm:text-5xl"
+                    className="game-result-spark"
                     style={{
                       top: i < 4 ? '-1.5rem' : 'auto',
                       bottom: i >= 4 ? '-1.5rem' : 'auto',
@@ -318,7 +321,7 @@ const SpinWheel = () => {
                       ease: "easeInOut"
                     }}
                   >
-                    *
+                    {['a', 'b', 'c', 'd'][i % 4]}
                   </motion.div>
                 ))}
 
@@ -327,13 +330,13 @@ const SpinWheel = () => {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.5 }}
                 >
-                  <h2 className="text-3xl hh sm:text-5xl md:text-6xl font-black text-white mb-4 sm:mb-6 drop-shadow-lg">
+                  <h2 className="game-modal-title game-result-title">
                     FELICITATIONS !
                   </h2>
-                  <div className="bg-white/30 backdrop-blur-md rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-inner">
-                    <p className="text-xl sm:text-2xl md:text-3xl text-white mb-3 sm:mb-4 font-semibold">Vous avez gagne :</p>
+                  <div className="game-modal-panel game-prize-panel">
+                    <p>Vous avez gagne :</p>
                     <motion.p
-                      className="text-2xl sm:text-4xl md:text-6xl font-black text-white drop-shadow-lg"
+                      className="game-prize-name"
                       animate={{ scale: [1, 1.05, 1] }}
                       transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
                     >
@@ -342,7 +345,7 @@ const SpinWheel = () => {
                   </div>
                   <motion.button
                     onClick={closeResult}
-                    className="px-8 sm:px-12 py-3 sm:py-4 bg-white text-purple-600 font-bold text-lg sm:text-xl rounded-full shadow-lg transition-all duration-300"
+                    className="game-modal-primary game-result-close"
                     whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.3)" }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ type: "spring", stiffness: 400, damping: 17 }}
