@@ -10,21 +10,18 @@ interface Prize {
 }
 
 const prizes: Prize[] = [
-  { name: 'Caprisun', probability: 85, color: '#FCD34D', rarity: '' },
-  { name: 'Red Bull', probability: 2, color: '#EF4444', rarity: '' },
-  { name: 'Tacos Market', probability: 0.7, color: '#F97316', rarity: '' },
-  { name: 'Tacos Tenders', probability: 0.7, color: '#FB923C', rarity: '' },
-  { name: 'Panini Nutella', probability: 2, color: '#A78BFA', rarity: '' },
-  { name: 'Panini Speculos', probability: 2, color: '#C084FC', rarity: '' },
-  { name: 'Canette classique', probability: 2, color: '#60A5FA', rarity: '' },
-  { name: 'Pizza junior', probability: 0.3, color: '#EC4899', rarity: '' },
-  { name: 'Kinder Bueno', probability: 2, color: '#34D399', rarity: '' },
-  { name: 'Tiramisu', probability: 0.7, color: '#FBBF24', rarity: '' },
-  { name: 'Bonbon au choix', probability: 2, color: '#F472B6', rarity: '' },
-  { name: 'Chewing-gum', probability: 2, color: '#2DD4BF', rarity: '' },
-  { name: 'Franuit', probability: 0.3, color: '#818CF8', rarity: '' },
-  { name: "Bon d'achat 5 EUR", probability: 0.3, color: '#10B981', rarity: '' },
-  { name: "Bon d'achat 50 EUR", probability: 0, color: '#F59E0B', rarity: '' },
+  { name: 'Caprisun', probability: 98, color: '#FCD34D', rarity: '' },
+  { name: 'Krousty M', probability: 0.199, color: '#EF4444', rarity: '' },
+  { name: 'Crousti L', probability: 0.199, color: '#F97316', rarity: '' },
+  { name: 'Crousti Boursin', probability: 0.199, color: '#FB923C', rarity: '' },
+  { name: 'Canette', probability: 0.199, color: '#60A5FA', rarity: '' },
+  { name: 'Tiramisu', probability: 0.199, color: '#C084FC', rarity: '' },
+  { name: 'Nems au poulet', probability: 0.199, color: '#34D399', rarity: '' },
+  { name: 'Nems crevette', probability: 0.199, color: '#FBBF24', rarity: '' },
+  { name: 'Un an de Krousty', probability: 0.01, color: '#F59E0B', rarity: '' },
+  { name: 'Supplement sauce', probability: 0.2, color: '#F472B6', rarity: '' },
+  { name: 'Menu Krousty', probability: 0.199, color: '#10B981', rarity: '' },
+  { name: 'Tenders', probability: 0.199, color: '#818CF8', rarity: '' },
 ];
 
 const referenceWheelColors = ['#ec1479', '#050505', '#28aeea', '#ffffff'];
