@@ -61,7 +61,7 @@ const SpinWheel = () => {
   };
 
   const spinWheel = () => {
-    if (isSpinning) return;
+    if (isSpinning || wonPrize) return;
 
     if (!reviewUnlocked) {
       openReviewPopup();
@@ -98,7 +98,6 @@ const SpinWheel = () => {
 
   const closeResult = () => {
     setShowResult(false);
-    setWonPrize(null);
   };
 
   return (
@@ -171,9 +170,9 @@ const SpinWheel = () => {
               }
             }}
             role="button"
-            tabIndex={isSpinning ? -1 : 0}
+            tabIndex={isSpinning || wonPrize ? -1 : 0}
             aria-label="Tourner la roue de la fortune"
-            aria-disabled={isSpinning}
+            aria-disabled={isSpinning || Boolean(wonPrize)}
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -209,11 +208,11 @@ const SpinWheel = () => {
             type="button"
             className="wheel-spin-cta"
             onClick={spinWheel}
-            disabled={isSpinning}
-            whileHover={isSpinning ? undefined : { scale: 1.05 }}
-            whileTap={isSpinning ? undefined : { scale: 0.96 }}
+            disabled={isSpinning || Boolean(wonPrize)}
+            whileHover={isSpinning || wonPrize ? undefined : { scale: 1.05 }}
+            whileTap={isSpinning || wonPrize ? undefined : { scale: 0.96 }}
           >
-            {isSpinning ? 'La roue tourne…' : 'Tourner la roue'}
+            {isSpinning ? 'La roue tourne…' : wonPrize ? 'Deja joue !' : 'Tourner et gagner !'}
           </motion.button>
         </div>
 
