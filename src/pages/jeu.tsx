@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './jeu.css';
 
@@ -7,12 +7,6 @@ interface Prize {
   probability: number;
   color: string;
   rarity: string;
-}
-
-interface ReviewSession {
-  id: string;
-  mapsUrl: string;
-  deadline: number;
 }
 
 const prizes: Prize[] = [
@@ -35,121 +29,18 @@ const prizes: Prize[] = [
 
 const referenceWheelColors = ['#ec1479', '#050505', '#28aeea', '#ffffff'];
 
-const formatRemainingTime = (milliseconds: number) => {
-  const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-};
-
-const API_BASE_URL = (import.meta.env.VITE_REVIEW_API_URL || 'http://127.0.0.1:3001').replace(/\/$/, '');
+const GOOGLE_MAPS_URL = import.meta.env.VITE_GOOGLE_MAPS_URL || 'https://maps.app.goo.gl/6Nnff6RjLSPY4F3x7?g_st=ic';
 
 const SpinWheel = () => {
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [wonPrize, setWonPrize] = useState<Prize | null>(null);
   const [showResult, setShowResult] = useState(false);
-  const [reviewSession, setReviewSession] = useState<ReviewSession | null>(null);
   const [reviewPopupOpen, setReviewPopupOpen] = useState(false);
   const [reviewUnlocked, setReviewUnlocked] = useState(false);
   const [linkOpened, setLinkOpened] = useState(false);
-  const [isStartingSession, setIsStartingSession] = useState(false);
-  const [isCheckingReview, setIsCheckingReview] = useState(false);
-  const [reviewExpired, setReviewExpired] = useState(false);
-  const [reviewError, setReviewError] = useState('');
-  const [remainingMs, setRemainingMs] = useState(10 * 60 * 1000);
   const wheelRef = useRef<HTMLDivElement>(null);
-  const checkingReviewRef = useRef(false);
   const wheelSliceSide = 100 - Math.tan((45 - 360 / prizes.length / 2) * (Math.PI / 180)) * 100;
-
-  useEffect(() => {
-    if (!reviewSession || reviewUnlocked || reviewExpired) return;
-
-    const timer = window.setInterval(() => {
-      const remaining = Math.max(0, reviewSession.deadline - Date.now());
-      setRemainingMs(remaining);
-      if (remaining <= 0) {
-        setReviewExpired(true);
-        setReviewError("Temps ecoule. Aucun avis n'a ete detecte pendant les 10 minutes. La roue reste bloquee.");
-        window.clearInterval(timer);
-      }
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [reviewExpired, reviewSession, reviewUnlocked]);
-
-  useEffect(() => {
-    if (!reviewSession || !linkOpened || reviewUnlocked || reviewExpired) return;
-
-    let stopped = false;
-    let timeoutId = 0;
-
-    const checkReview = async (): Promise<void> => {
-      if (stopped || reviewExpired || reviewUnlocked) return;
-
-      const remainingBeforeCheck = Math.max(0, reviewSession.deadline - Date.now());
-      if (remainingBeforeCheck <= 0) {
-        setReviewExpired(true);
-        setReviewError("Aucun nouvel avis detecte apres 10 minutes. La roue reste bloquee.");
-        return;
-      }
-
-      if (checkingReviewRef.current) return;
-
-      checkingReviewRef.current = true;
-      setIsCheckingReview(true);
-      setReviewError('');
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/review-gate/check?id=${encodeURIComponent(reviewSession.id)}`);
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Verification impossible pour le moment.');
-        }
-
-        if (data.verified) {
-          stopped = true;
-          setReviewUnlocked(true);
-          setReviewPopupOpen(false);
-          setReviewError('');
-          return;
-        }
-
-        if (data.expired) {
-          stopped = true;
-          setReviewExpired(true);
-          setReviewError("Aucun nouvel avis detecte apres 10 minutes. La roue reste bloquee.");
-          return;
-        }
-
-        if (typeof data.remainingMs === 'number') {
-          setRemainingMs(data.remainingMs);
-        }
-      } catch (error) {
-        setReviewError(error instanceof Error ? error.message : 'Verification impossible pour le moment.');
-      } finally {
-        checkingReviewRef.current = false;
-        setIsCheckingReview(false);
-
-        if (!stopped && !reviewUnlocked) {
-          const remainingAfterCheck = Math.max(0, reviewSession.deadline - Date.now());
-          if (remainingAfterCheck <= 0) {
-            setReviewExpired(true);
-            setReviewError("Aucun nouvel avis detecte apres 10 minutes. La roue reste bloquee.");
-          } else {
-            timeoutId = window.setTimeout(checkReview, 5000);
-          }
-        }
-      }
-    };
-
-    checkReview();
-    return () => {
-      stopped = true;
-      window.clearTimeout(timeoutId);
-    };
-  }, [linkOpened, reviewExpired, reviewSession, reviewUnlocked]);
 
   const selectPrize = () => {
     const totalProbability = prizes.reduce((sum, p) => sum + p.probability, 0);
@@ -165,34 +56,8 @@ const SpinWheel = () => {
     return prizes[0];
   };
 
-  const openReviewPopup = async () => {
+  const openReviewPopup = () => {
     setReviewPopupOpen(true);
-
-    if (reviewExpired) {
-      setReviewError("Le delai de 10 minutes est termine. La roue reste bloquee.");
-      return;
-    }
-
-    setReviewError('');
-
-    if (reviewSession || isStartingSession) return;
-
-    setIsStartingSession(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/review-gate/start`, { method: 'POST' });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Impossible de preparer la verification.');
-      }
-
-      setReviewSession(data);
-      setRemainingMs(Math.max(0, data.deadline - Date.now()));
-    } catch (error) {
-      setReviewError(error instanceof Error ? error.message : 'Impossible de preparer la verification.');
-    } finally {
-      setIsStartingSession(false);
-    }
   };
 
   const spinWheel = () => {
@@ -227,7 +92,8 @@ const SpinWheel = () => {
 
   const handleMapsClick = () => {
     setLinkOpened(true);
-    setReviewError('');
+    setReviewUnlocked(true);
+    setReviewPopupOpen(false);
   };
 
   const closeResult = () => {
@@ -368,27 +234,22 @@ const SpinWheel = () => {
                 className="w-full max-w-xl bg-white text-gray-950 rounded-[28px] shadow-2xl p-6 sm:p-8 text-center"
               >
                 <h2 className="text-3xl sm:text-5xl font-black mb-6 leading-tight">
-                  Ajouter un commentaire pour debloquer la roue
+                  Ouvrez Google Maps pour debloquer la roue
                 </h2>
 
                 <div className="bg-gray-100 rounded-2xl p-4 mb-5">
-                  <p className="text-sm font-bold text-gray-600 mb-1">Temps restant</p>
-                  <p className="text-4xl font-black text-purple-700">{formatRemainingTime(remainingMs)}</p>
+                  <p className="text-lg sm:text-2xl font-black text-purple-700">
+                    Cliquez sur le lien, puis revenez ici pour tourner la roue.
+                  </p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <a
-                    href={reviewSession?.mapsUrl || '#'}
+                    href={GOOGLE_MAPS_URL}
                     target="_blank"
                     rel="noreferrer"
                     onClick={handleMapsClick}
-                    className={`flex-1 px-5 py-4 rounded-full font-black text-white shadow-lg transition ${
-                      reviewSession
-                        ? reviewExpired
-                          ? 'bg-gray-400 pointer-events-none'
-                          : 'bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-emerald-800'
-                        : 'bg-gray-400 pointer-events-none'
-                    }`}
+                    className="flex-1 px-5 py-4 rounded-full font-black text-white shadow-lg transition bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-emerald-800"
                   >
                     Ouvrir Google Maps
                   </a>
@@ -401,15 +262,12 @@ const SpinWheel = () => {
                   </button>
                 </div>
 
-                <div className="min-h-[56px] mt-5 text-sm font-semibold">
-                  {isStartingSession && <p className="text-gray-600">Preparation de la verification...</p>}
-                  {!isStartingSession && linkOpened && isCheckingReview && (
-                    <p className="text-purple-700">Verification de votre avis en cours...</p>
+                <div className="min-h-[40px] mt-5 text-sm font-semibold">
+                  {linkOpened ? (
+                    <p className="text-purple-700">Lien ouvert. La roue est debloquee.</p>
+                  ) : (
+                    <p className="text-gray-600">La roue se debloque des que vous cliquez sur Google Maps.</p>
                   )}
-                  {!isStartingSession && linkOpened && !isCheckingReview && !reviewError && (
-                    <p className="text-gray-600">Verification continue active jusqu'a la fin des 10 minutes.</p>
-                  )}
-                  {reviewError && <p className="text-red-600">{reviewError}</p>}
                 </div>
               </motion.div>
             </motion.div>
