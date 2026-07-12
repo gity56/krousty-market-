@@ -159,13 +159,26 @@
   position: absolute;
   z-index: 4;
   top: 50%;
-  left: 182px;
-  width: 82px;
-  height: 30px;
+  left: 205px;
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
   transform: translateY(-50%);
-  background: #28aeea;
-  clip-path: polygon(0 22%, 65% 22%, 65% 0, 100% 50%, 65% 100%, 65% 78%, 0 78%);
+  color: #fcd34d;
   filter: drop-shadow(0 0 8px #28aeea) drop-shadow(0 3px 3px #050505);
+  font-size: 76px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow:
+    3px 3px 0 #050505,
+    0 0 12px #28aeea,
+    0 0 18px #ec1479;
+}
+
+.wheel-selection-arrow::before {
+  content: '-';
 }
 
 .wheel-spin-cta {
@@ -254,11 +267,11 @@
 
 .reference-spin-option span {
   position: relative;
-  width: 72%;
+  width: 82%;
   overflow: hidden;
   color: #fff;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: clamp(17px, 1.65vw, 22px);
+  font-weight: 900;
   line-height: 1.05;
   text-align: center;
   text-overflow: ellipsis;
@@ -479,7 +492,12 @@
 
   .wheel-stage .reference-spin-container { left: calc(min(92vw, 440px) / -2); }
   .wheel-light { left: -190px; width: 360px; height: 360px; }
-  .wheel-selection-arrow { left: calc(min(92vw, 440px) / 2 - 38px); width: 68px; height: 25px; }
+  .wheel-selection-arrow {
+    left: calc(min(92vw, 440px) / 2 - 18px);
+    width: 34px;
+    height: 34px;
+    font-size: 58px;
+  }
   .wheel-spin-cta {
     left: calc(min(92vw, 440px) / 2 + 48px);
     min-width: 0;
@@ -488,7 +506,7 @@
     font-size: clamp(11px, 3.5vw, 15px);
   }
 
-  .reference-spin-option span { font-size: clamp(10px, 3.1vw, 15px); }
+  .reference-spin-option span { font-size: clamp(13px, 3.8vw, 18px); }
 
   .game-modal-actions {
     flex-direction: column;

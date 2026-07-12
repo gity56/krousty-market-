@@ -26,7 +26,7 @@ const prizes: Prize[] = [
 
 const referenceWheelColors = ['#ec1479', '#050505', '#28aeea', '#ffffff'];
 
-const GOOGLE_MAPS_URL = import.meta.env.VITE_GOOGLE_MAPS_URL || 'https://maps.app.goo.gl/6Nnff6RjLSPY4F3x7?g_st=ic';
+const GOOGLE_MAPS_URL = import.meta.env.VITE_GOOGLE_MAPS_URL || 'https://g.page/r/CcfZNj_s6Sy7EBM/review';
 
 const SpinWheel = () => {
   const [rotation, setRotation] = useState(0);
