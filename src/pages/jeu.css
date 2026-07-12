@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Crazy Wish';
-  src: url('/crazy_wish/CrazyWish.otf') format('opentype');
+  font-family: 'Happy School';
+  src: url('/happy_school/Happy%20School.otf') format('opentype');
   font-display: swap;
 }
 
@@ -14,7 +14,7 @@
 .game-page button,
 .game-page a,
 .game-page input {
-  font-family: 'Crazy Wish', 'Arial Black', sans-serif;
+  font-family: 'Happy School', 'Arial Black', sans-serif;
 }
 
 .reference-spin-container {
@@ -114,7 +114,7 @@
   width: 100%;
   margin-top: -8px;
   color: #fff;
-  font-size: clamp(24px, 2.8vw, 36px) !important;
+  font-size: clamp(30px, 3.6vw, 48px) !important;
   font-weight: 700;
   letter-spacing: .02em;
   text-shadow: 0 2px 12px #000;
@@ -159,22 +159,22 @@
   position: absolute;
   z-index: 4;
   top: 50%;
-  left: 205px;
+  left: 202px;
   display: flex;
   width: 44px;
   height: 44px;
   align-items: center;
   justify-content: center;
   transform: translateY(-50%);
-  color: #fcd34d;
+  color: #fff;
   filter: drop-shadow(0 0 8px #28aeea) drop-shadow(0 3px 3px #050505);
-  font-size: 76px;
+  font-size: 96px;
   font-weight: 900;
   line-height: 1;
   text-shadow:
     3px 3px 0 #050505,
-    0 0 12px #28aeea,
-    0 0 18px #ec1479;
+    0 0 16px #28aeea,
+    0 0 22px #ec1479;
 }
 
 .wheel-selection-arrow::before {
@@ -195,7 +195,7 @@
   box-shadow: 0 0 0 5px #050505, 0 0 28px rgba(236, 20, 121, .65);
   color: #fff;
   cursor: pointer;
-  font-size: clamp(15px, 1.55vw, 20px);
+  font-size: clamp(19px, 2vw, 27px);
   font-weight: 900;
   letter-spacing: .03em;
   text-transform: uppercase;
@@ -270,7 +270,7 @@
   width: 82%;
   overflow: hidden;
   color: #fff;
-  font-size: clamp(17px, 1.65vw, 22px);
+  font-size: clamp(22px, 2.2vw, 30px);
   font-weight: 900;
   line-height: 1.05;
   text-align: center;
@@ -328,7 +328,7 @@
   z-index: 1;
   margin: 0 0 22px;
   color: #fff;
-  font-size: clamp(31px, 5.2vw, 56px);
+  font-size: clamp(40px, 6.4vw, 72px);
   font-weight: 900;
   line-height: .95;
   text-shadow:
@@ -352,7 +352,7 @@
 .game-modal-panel p {
   margin: 0;
   color: #fff;
-  font-size: clamp(18px, 3vw, 27px);
+  font-size: clamp(23px, 3.7vw, 36px);
   font-weight: 900;
   line-height: 1.08;
   text-shadow: 2px 2px 0 #050505;
@@ -376,7 +376,7 @@
   border-radius: 999px;
   box-shadow: 0 0 0 5px #050505, 0 0 24px rgba(236, 20, 121, .5);
   cursor: pointer;
-  font-size: clamp(16px, 2.4vw, 22px);
+  font-size: clamp(21px, 3vw, 30px);
   font-weight: 900;
   line-height: 1;
   text-align: center;
@@ -413,7 +413,7 @@
 .game-modal-note p {
   margin: 0;
   color: #fcd34d;
-  font-size: clamp(14px, 2.1vw, 18px);
+  font-size: clamp(18px, 2.7vw, 24px);
   font-weight: 900;
   text-shadow: 2px 2px 0 #050505;
 }
@@ -458,7 +458,7 @@
   display: block;
   margin-top: 12px;
   color: #fff;
-  font-size: clamp(34px, 7vw, 72px);
+  font-size: clamp(46px, 8.2vw, 92px);
   font-weight: 900;
   line-height: .95;
   text-shadow:
@@ -481,7 +481,7 @@
 @media (max-width: 640px) {
   .game-brand { top: 12px; }
   .game-brand-logo { width: 155px; }
-  .game-brand p { max-width: 370px; margin-top: -10px; font-size: 20px !important; }
+  .game-brand p { max-width: 380px; margin-top: -10px; font-size: 27px !important; }
   .wheel-stage { top: 64%; height: min(92vw, 440px); }
 
   .reference-spin-container {
@@ -493,20 +493,31 @@
   .wheel-stage .reference-spin-container { left: calc(min(92vw, 440px) / -2); }
   .wheel-light { left: -190px; width: 360px; height: 360px; }
   .wheel-selection-arrow {
-    left: calc(min(92vw, 440px) / 2 - 18px);
+    left: calc(min(92vw, 440px) / 2 - 20px);
     width: 34px;
     height: 34px;
-    font-size: 58px;
+    font-size: 74px;
   }
   .wheel-spin-cta {
     left: calc(min(92vw, 440px) / 2 + 48px);
     min-width: 0;
     width: min(40vw, 165px);
     padding: 11px 9px;
-    font-size: clamp(11px, 3.5vw, 15px);
+    font-size: clamp(16px, 4.6vw, 20px);
   }
 
-  .reference-spin-option span { font-size: clamp(13px, 3.8vw, 18px); }
+  .reference-spin-option span {
+    width: 88%;
+    font-size: clamp(16px, 4.7vw, 23px);
+  }
+
+  .game-modal-title {
+    font-size: clamp(34px, 10vw, 48px);
+  }
+
+  .game-prize-name {
+    font-size: clamp(40px, 12vw, 58px);
+  }
 
   .game-modal-actions {
     flex-direction: column;
