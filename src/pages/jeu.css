@@ -1,0 +1,294 @@
+@font-face {
+  font-family: 'Crazy Wish';
+  src: url('/crazy_wish/CrazyWish.otf') format('opentype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Crazy Smile';
+  src: url('/crazy_smile/crazy%20smile.ttf') format('truetype');
+  font-display: swap;
+}
+
+.game-page,
+.game-page button,
+.game-page a,
+.game-page input {
+  font-family: 'Crazy Wish', 'Arial Black', sans-serif;
+}
+
+.reference-spin-container {
+  position: relative;
+  display: flex;
+  width: 440px;
+  height: 440px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0;
+  box-sizing: border-box;
+  border-radius: 50%;
+  box-shadow: 0 0 0 10px #050505, 0 0 0 15px #fff, 0 0 28px #fcd34d;
+}
+
+.game-arcade-background {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 13% 72%, rgba(236, 20, 121, .5), transparent 30%),
+    radial-gradient(circle at 82% 35%, rgba(40, 174, 234, .38), transparent 32%),
+    linear-gradient(135deg, #050505 0 38%, #17111a 58%, #07151c 100%);
+}
+
+.game-arcade-background::after {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 42px 42px;
+  content: '';
+  mask-image: linear-gradient(to bottom, transparent, #000 25%, #000);
+}
+
+.crazy-smile-background {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.crazy-smile-background span {
+  position: absolute;
+  color: rgba(255, 255, 255, .11);
+  font-family: 'Crazy Smile', sans-serif;
+  font-size: clamp(48px, 8vw, 118px);
+  line-height: 1;
+  text-shadow: 0 0 22px rgba(40, 174, 234, .28);
+  transform: rotate(calc((var(--smile-index) * 31deg) - 75deg));
+  animation: crazy-smile-float 7s ease-in-out infinite alternate;
+  animation-delay: calc(var(--smile-index) * -.55s);
+}
+
+.crazy-smile-background span:nth-child(1) { top: 8%; left: 6%; color: rgba(236, 20, 121, .19); }
+.crazy-smile-background span:nth-child(2) { top: 16%; left: 24%; }
+.crazy-smile-background span:nth-child(3) { top: 7%; right: 12%; color: rgba(40, 174, 234, .2); }
+.crazy-smile-background span:nth-child(4) { top: 31%; right: 4%; }
+.crazy-smile-background span:nth-child(5) { top: 46%; left: 37%; color: rgba(236, 20, 121, .14); }
+.crazy-smile-background span:nth-child(6) { top: 55%; right: 18%; color: rgba(40, 174, 234, .18); }
+.crazy-smile-background span:nth-child(7) { bottom: 7%; right: 5%; }
+.crazy-smile-background span:nth-child(8) { bottom: 3%; left: 26%; color: rgba(236, 20, 121, .18); }
+.crazy-smile-background span:nth-child(9) { top: 72%; left: 48%; }
+.crazy-smile-background span:nth-child(10) { top: 25%; left: 48%; color: rgba(40, 174, 234, .15); }
+.crazy-smile-background span:nth-child(11) { bottom: 18%; right: 35%; color: rgba(236, 20, 121, .15); }
+.crazy-smile-background span:nth-child(12) { top: 3%; left: 67%; }
+
+@keyframes crazy-smile-float {
+  from { translate: 0 -8px; scale: .92; opacity: .55; }
+  to { translate: 10px 14px; scale: 1.08; opacity: 1; }
+}
+
+.game-brand {
+  position: absolute;
+  z-index: 5;
+  top: clamp(18px, 3vh, 38px);
+  right: 0;
+  left: 0;
+  display: flex;
+  width: min(90vw, 650px);
+  flex-direction: column;
+  align-items: center;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.game-brand-logo {
+  width: clamp(170px, 21vw, 270px);
+  height: auto;
+  filter: drop-shadow(0 0 15px rgba(255,255,255,.25)) drop-shadow(0 0 25px rgba(236,20,121,.35));
+}
+
+.game-brand p {
+  width: 100%;
+  margin-top: -8px;
+  color: #fff;
+  font-size: clamp(24px, 2.8vw, 36px) !important;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-shadow: 0 2px 12px #000;
+}
+
+.wheel-stage {
+  position: absolute;
+  top: 59%;
+  left: 0;
+  width: 100%;
+  height: 440px;
+  transform: translateY(-50%);
+}
+
+.wheel-stage .reference-spin-container {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: -220px;
+  cursor: pointer;
+}
+
+.wheel-stage .reference-spin-container:focus-visible {
+  outline: 4px solid #28aeea;
+  outline-offset: 16px;
+}
+
+.wheel-light {
+  position: absolute;
+  z-index: 0;
+  left: -185px;
+  width: 410px;
+  height: 410px;
+  border-radius: 50%;
+  filter: blur(55px);
+}
+
+.wheel-light-pink { top: -20px; background: rgba(236, 20, 121, .75); }
+.wheel-light-blue { top: 70px; left: -110px; background: rgba(40, 174, 234, .65); }
+
+.wheel-selection-arrow {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 182px;
+  width: 82px;
+  height: 30px;
+  transform: translateY(-50%);
+  background: #28aeea;
+  clip-path: polygon(0 22%, 65% 22%, 65% 0, 100% 50%, 65% 100%, 65% 78%, 0 78%);
+  filter: drop-shadow(0 0 8px #28aeea) drop-shadow(0 3px 3px #050505);
+}
+
+.wheel-spin-cta {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: clamp(285px, 31vw, 470px);
+  min-width: 190px;
+  padding: 14px 22px;
+  transform: translateY(-50%);
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ec1479, #b60c5b);
+  box-shadow: 0 0 0 5px #050505, 0 0 28px rgba(236, 20, 121, .65);
+  color: #fff;
+  cursor: pointer;
+  font-size: clamp(15px, 1.55vw, 20px);
+  font-weight: 900;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 2px rgba(0,0,0,.4);
+}
+
+.wheel-spin-cta:disabled { cursor: not-allowed; filter: grayscale(.5); opacity: .75; }
+
+.reference-spin-wheel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 5px solid #050505;
+  border-radius: 50%;
+  background: #050505;
+}
+
+.reference-spin-button {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  width: 60px;
+  height: 60px;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #050505;
+  box-shadow: 0 0 0 4px #ec1479, 0 6px 18px rgba(5, 5, 5, .45);
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: .08rem;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.reference-spin-button::before {
+  position: absolute;
+  z-index: -1;
+  top: -32px;
+  width: 16px;
+  height: 32px;
+  background: #28aeea;
+  clip-path: polygon(50% 0, 15% 100%, 85% 100%);
+  content: '';
+}
+
+.reference-spin-button:hover:not(:disabled) { background: #ec1479; }
+.reference-spin-button:active:not(:disabled) { background: #28aeea; }
+.reference-spin-button:focus-visible { outline: 3px solid #fcd34d; outline-offset: 6px; }
+.reference-spin-button:disabled { background: #2f2f2f; color: #9d9d9d; cursor: not-allowed; }
+
+.reference-spin-option {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 50%;
+  height: 50%;
+  align-items: center;
+  justify-content: center;
+  transform-origin: bottom right;
+  user-select: none;
+}
+
+.reference-spin-option span {
+  position: relative;
+  width: 72%;
+  overflow: hidden;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.05;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-shadow: 2px 2px 0 #050505, 0 0 5px rgba(5, 5, 5, .45);
+  text-transform: uppercase;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 640px) {
+  .game-brand { top: 12px; }
+  .game-brand-logo { width: 155px; }
+  .game-brand p { max-width: 370px; margin-top: -10px; font-size: 20px !important; }
+  .wheel-stage { top: 64%; height: min(92vw, 440px); }
+
+  .reference-spin-container {
+    width: min(92vw, 440px);
+    height: min(92vw, 440px);
+    box-shadow: 0 0 0 6px #050505, 0 0 0 10px #fff, 0 0 20px #fcd34d;
+  }
+
+  .wheel-stage .reference-spin-container { left: calc(min(92vw, 440px) / -2); }
+  .wheel-light { left: -190px; width: 360px; height: 360px; }
+  .wheel-selection-arrow { left: calc(min(92vw, 440px) / 2 - 38px); width: 68px; height: 25px; }
+  .wheel-spin-cta {
+    left: calc(min(92vw, 440px) / 2 + 48px);
+    min-width: 0;
+    width: min(40vw, 165px);
+    padding: 11px 9px;
+    font-size: clamp(11px, 3.5vw, 15px);
+  }
+
+  .reference-spin-option span { font-size: clamp(10px, 3.1vw, 15px); }
+}
