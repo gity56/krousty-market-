@@ -1,4 +1,4 @@
-import { type CSSProperties, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './jeu.css';
 
@@ -27,6 +27,137 @@ const prizes: Prize[] = [
 const referenceWheelColors = ['#ec1479', '#050505', '#28aeea', '#ffffff'];
 
 const GOOGLE_MAPS_URL = 'https://g.page/r/CcfZNj_s6Sy7EBM/review';
+
+const ArcadeThreeField = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let cleanup: (() => void) | undefined;
+    let frameId = 0;
+    let mounted = true;
+
+    void import('three').then((THREE) => {
+      if (!mounted) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+      camera.position.z = 9;
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+
+      const particleCount = 120;
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+      const palette = [
+        new THREE.Color('#ec1479'),
+        new THREE.Color('#28aeea'),
+        new THREE.Color('#fcd34d'),
+        new THREE.Color('#ffffff')
+      ];
+
+      for (let i = 0; i < particleCount; i += 1) {
+        const radius = 3.4 + Math.random() * 4.9;
+        const angle = Math.random() * Math.PI * 2;
+        positions[i * 3] = Math.cos(angle) * radius;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 7.2;
+        positions[i * 3 + 2] = Math.sin(angle) * radius - Math.random() * 4;
+
+        const color = palette[i % palette.length];
+        colors[i * 3] = color.r;
+        colors[i * 3 + 1] = color.g;
+        colors[i * 3 + 2] = color.b;
+      }
+
+      const particleGeometry = new THREE.BufferGeometry();
+      particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const particleMaterial = new THREE.PointsMaterial({
+        size: 0.085,
+        transparent: true,
+        opacity: 0.72,
+        vertexColors: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const particles = new THREE.Points(particleGeometry, particleMaterial);
+      scene.add(particles);
+
+      const ringGroup = new THREE.Group();
+      const ringColors = ['#ec1479', '#28aeea', '#fcd34d'];
+      ringColors.forEach((color, index) => {
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(2.35 + index * 0.52, 0.012, 8, 120),
+          new THREE.MeshBasicMaterial({
+            color,
+            transparent: true,
+            opacity: 0.22 - index * 0.035,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          })
+        );
+        ring.rotation.x = Math.PI / 2.8 + index * 0.18;
+        ring.rotation.y = index * 0.5;
+        ringGroup.add(ring);
+      });
+      ringGroup.position.set(-2.7, -1.1, -1);
+      scene.add(ringGroup);
+
+      const resize = () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      };
+
+      const clock = new THREE.Clock();
+      const animate = () => {
+        const elapsed = clock.getElapsedTime();
+        particles.rotation.y = elapsed * 0.055;
+        particles.rotation.x = Math.sin(elapsed * 0.35) * 0.08;
+        ringGroup.rotation.z = elapsed * 0.16;
+        ringGroup.rotation.y = Math.sin(elapsed * 0.45) * 0.2;
+        renderer.render(scene, camera);
+        frameId = window.requestAnimationFrame(animate);
+      };
+
+      resize();
+      animate();
+      window.addEventListener('resize', resize);
+
+      cleanup = () => {
+        window.cancelAnimationFrame(frameId);
+        window.removeEventListener('resize', resize);
+        particleGeometry.dispose();
+        particleMaterial.dispose();
+        ringGroup.children.forEach((child) => {
+          const mesh = child as typeof THREE.Mesh.prototype;
+          mesh.geometry.dispose();
+          mesh.material.dispose();
+        });
+        renderer.dispose();
+      };
+    });
+
+    return () => {
+      mounted = false;
+      cleanup?.();
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="game-three-field" aria-hidden="true" />;
+};
 
 const SpinWheel = () => {
   const [rotation, setRotation] = useState(0);
@@ -100,6 +231,7 @@ const SpinWheel = () => {
   return (
     <div className="game-page fixed inset-0 w-screen h-screen overflow-hidden">
       <div className="game-arcade-background" />
+      <ArcadeThreeField />
       <div className="crazy-smile-background" aria-hidden="true">
         {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'].map((glyph, index) => (
           <span key={glyph} style={{ '--smile-index': index } as CSSProperties}>{glyph}</span>
@@ -171,8 +303,20 @@ const SpinWheel = () => {
             aria-label="Tourner la roue de la fortune"
             aria-disabled={isSpinning || Boolean(wonPrize)}
             initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            animate={{
+              y: isSpinning ? [0, -4, 0, 4, 0] : [0, -8, 0],
+              opacity: 1,
+              scale: isSpinning ? [1, 1.015, 1] : 1
+            }}
+            transition={{
+              y: isSpinning
+                ? { duration: 0.55, repeat: Infinity, ease: "easeInOut" }
+                : { duration: 4.5, repeat: Infinity, ease: "easeInOut" },
+              scale: { duration: 0.45, repeat: isSpinning ? Infinity : 0, ease: "easeInOut" },
+              opacity: { duration: 0.8, ease: "easeOut" }
+            }}
+            whileHover={isSpinning || wonPrize ? undefined : { scale: 1.025 }}
+            whileTap={isSpinning || wonPrize ? undefined : { scale: 0.985 }}
           >
             <div
               ref={wheelRef}
@@ -200,14 +344,23 @@ const SpinWheel = () => {
             </div>
           </motion.div>
 
-          <div className="wheel-selection-marker" aria-hidden="true">-</div>
+          <motion.div
+            className="wheel-selection-marker"
+            aria-hidden="true"
+            animate={{
+              opacity: isSpinning ? [1, 0.78, 1] : [0.86, 1, 0.86]
+            }}
+            transition={{ duration: isSpinning ? 0.42 : 1.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            -
+          </motion.div>
           <motion.button
             type="button"
             className="wheel-spin-cta"
             onClick={spinWheel}
             disabled={isSpinning || Boolean(wonPrize)}
-            whileHover={isSpinning || wonPrize ? undefined : { scale: 1.05 }}
-            whileTap={isSpinning || wonPrize ? undefined : { scale: 0.96 }}
+            animate={isSpinning ? { opacity: [1, 0.86, 1] } : { opacity: 1 }}
+            transition={isSpinning ? { duration: 0.7, repeat: Infinity, ease: "easeInOut" } : undefined}
           >
             {isSpinning ? 'La roue tourne…' : wonPrize ? 'Deja joue !' : 'Tourner et gagner !'}
           </motion.button>

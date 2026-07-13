@@ -33,6 +33,33 @@
   box-shadow: 0 0 0 10px #050505, 0 0 0 15px #fff, 0 0 28px #fcd34d;
 }
 
+.reference-spin-container::before,
+.reference-spin-container::after {
+  position: absolute;
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+.reference-spin-container::before {
+  z-index: 0;
+  inset: -16px;
+  background:
+    conic-gradient(from 0deg, #ec1479, #fcd34d, #28aeea, #fff, #ec1479);
+  opacity: .42;
+  filter: blur(12px);
+  animation: wheel-rim-glow 5.5s linear infinite;
+}
+
+.reference-spin-container::after {
+  z-index: 4;
+  inset: 13px;
+  border: 2px solid rgba(255,255,255,.45);
+  box-shadow:
+    inset 0 0 18px rgba(255,255,255,.2),
+    0 0 18px rgba(40,174,234,.32);
+}
+
 .game-arcade-background {
   position: absolute;
   inset: 0;
@@ -51,11 +78,35 @@
   background-size: 42px 42px;
   content: '';
   mask-image: linear-gradient(to bottom, transparent, #000 25%, #000);
+  animation: arcade-grid-drift 14s linear infinite;
+}
+
+.game-arcade-background::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 0 34%, rgba(255,255,255,.08) 44%, transparent 54% 100%);
+  background-size: 260% 260%;
+  content: '';
+  opacity: .42;
+  animation: arcade-light-sweep 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.game-three-field {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .82;
+  pointer-events: none;
+  mix-blend-mode: screen;
 }
 
 .crazy-smile-background {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
@@ -91,6 +142,46 @@
   to { translate: 10px 14px; scale: 1.08; opacity: 1; }
 }
 
+@keyframes arcade-grid-drift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 42px 42px, 42px 42px; }
+}
+
+@keyframes arcade-light-sweep {
+  0%, 100% { background-position: 130% 50%; opacity: .18; }
+  45%, 55% { opacity: .46; }
+  50% { background-position: -30% 50%; }
+}
+
+@keyframes wheel-rim-glow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes logo-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+}
+
+@keyframes cta-shine {
+  from { transform: translateX(-140%) skewX(-18deg); }
+  to { transform: translateX(180%) skewX(-18deg); }
+}
+
+@keyframes marker-aura {
+  0%, 100% { filter: drop-shadow(0 0 8px #28aeea) drop-shadow(0 3px 3px #050505); }
+  50% { filter: drop-shadow(0 0 18px #fcd34d) drop-shadow(0 0 24px #ec1479); }
+}
+
+@keyframes marker-pulse {
+  0%, 100% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(-50%) scale(1.1); }
+}
+
+@keyframes cta-breathe {
+  0%, 100% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(-50%) scale(1.025); }
+}
+
 .game-brand {
   position: absolute;
   z-index: 5;
@@ -110,6 +201,8 @@
   width: clamp(170px, 21vw, 270px);
   height: auto;
   filter: drop-shadow(0 0 15px rgba(255,255,255,.25)) drop-shadow(0 0 25px rgba(236,20,121,.35));
+  animation: logo-float 5.5s ease-in-out infinite;
+  transform-origin: center;
 }
 
 .game-brand p {
@@ -153,6 +246,7 @@
   height: 410px;
   border-radius: 50%;
   filter: blur(55px);
+  mix-blend-mode: screen;
 }
 
 .wheel-light-pink { top: -20px; background: rgba(236, 20, 121, .75); }
@@ -178,6 +272,10 @@
     3px 3px 0 #050505,
     0 0 16px #28aeea,
     0 0 22px #ec1479;
+  animation:
+    marker-aura 1.65s ease-in-out infinite,
+    marker-pulse 1.65s ease-in-out infinite;
+  transform-origin: center;
 }
 
 .wheel-spin-cta {
@@ -199,12 +297,41 @@
   letter-spacing: .03em;
   text-transform: uppercase;
   text-shadow: 0 2px 2px rgba(0,0,0,.4);
+  overflow: hidden;
+  animation: cta-breathe 2.3s ease-in-out infinite;
+  transition: box-shadow .22s ease, filter .22s ease;
+  transform-origin: center;
+}
+
+.wheel-spin-cta::after {
+  position: absolute;
+  inset: -35% auto -35% -45%;
+  width: 52%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.62), transparent);
+  content: '';
+  animation: cta-shine 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.wheel-spin-cta:hover:not(:disabled) {
+  animation-play-state: paused;
+  box-shadow:
+    0 0 0 5px #050505,
+    0 0 22px rgba(252, 211, 77, .78),
+    0 0 34px rgba(236, 20, 121, .72);
+  filter: saturate(1.15);
+  transform: translateY(-50%) scale(1.045);
+}
+
+.wheel-spin-cta:active:not(:disabled) {
+  transform: translateY(-50%) scale(.97);
 }
 
 .wheel-spin-cta:disabled { cursor: not-allowed; filter: grayscale(.5); opacity: .75; }
 
 .reference-spin-wheel {
   position: absolute;
+  z-index: 1;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -212,6 +339,7 @@
   border: 5px solid #050505;
   border-radius: 50%;
   background: #050505;
+  will-change: transform;
 }
 
 .reference-spin-button {
@@ -311,6 +439,18 @@
     0 0 65px rgba(40, 174, 234, .35);
   color: #fff;
   text-align: center;
+}
+
+.game-modal-card::after {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 0 35%, rgba(255,255,255,.1) 47%, transparent 58% 100%);
+  content: '';
+  opacity: .55;
+  transform: translateX(-120%);
+  animation: modal-sheen 4.8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .game-modal-card::before {
@@ -475,6 +615,24 @@
   font-size: clamp(38px, 7vw, 72px);
   color: rgba(252, 211, 77, .5);
   z-index: 0;
+}
+
+@keyframes modal-sheen {
+  0%, 35% { transform: translateX(-120%); }
+  58%, 100% { transform: translateX(120%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-arcade-background::before,
+  .game-arcade-background::after,
+  .crazy-smile-background span,
+  .reference-spin-container::before,
+  .game-brand-logo,
+  .wheel-selection-marker,
+  .wheel-spin-cta::after,
+  .game-modal-card::after {
+    animation: none;
+  }
 }
 
 @media (max-width: 640px) {
