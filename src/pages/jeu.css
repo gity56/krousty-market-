@@ -73,12 +73,13 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size: 42px 42px;
+    radial-gradient(circle at 28px 32px, rgba(252,211,77,.11) 0 7px, transparent 8px),
+    radial-gradient(circle at 138px 96px, rgba(236,20,121,.1) 0 8px, transparent 9px),
+    radial-gradient(circle at 226px 48px, rgba(40,174,234,.1) 0 6px, transparent 7px);
+  background-size: 300px 220px;
   content: '';
   mask-image: linear-gradient(to bottom, transparent, #000 25%, #000);
-  animation: arcade-grid-drift 14s linear infinite;
+  animation: candy-pattern-drift 18s linear infinite;
 }
 
 .game-arcade-background::before {
@@ -104,9 +105,58 @@
   mix-blend-mode: screen;
 }
 
-.crazy-smile-background {
+.candy-background {
   position: absolute;
   z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.candy-piece {
+  position: absolute;
+  display: block;
+  width: clamp(30px, 4.6vw, 66px);
+  height: clamp(30px, 4.6vw, 66px);
+  opacity: .32;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 10px rgba(255,255,255,.18))
+    drop-shadow(0 0 16px rgba(236,20,121,.18));
+  transform:
+    translate3d(0, 0, 0)
+    rotate(calc((var(--candy-index) * 29deg) - 70deg));
+  animation: candy-float 7.5s ease-in-out infinite alternate;
+  animation-delay: calc(var(--candy-index) * -.42s);
+}
+
+.candy-piece-1 {
+  width: clamp(42px, 6.8vw, 96px);
+  height: clamp(42px, 6.8vw, 96px);
+}
+
+.candy-piece-2 {
+  width: clamp(54px, 7vw, 102px);
+  height: clamp(24px, 3.1vw, 42px);
+}
+
+.candy-piece-3 {
+  width: clamp(46px, 7vw, 104px);
+  height: clamp(34px, 5vw, 74px);
+}
+
+.candy-piece-4 {
+  width: clamp(42px, 6vw, 86px);
+  height: clamp(32px, 4.6vw, 66px);
+}
+
+.candy-piece:nth-child(1) { top: 10%; left: 5%; }
+.candy-piece:nth-child(2) { top: 15%; left: 28%; }
+.candy-piece:nth-child(3) { top: 7%; right: 18%; }
+
+.crazy-smile-background {
+  position: absolute;
+  z-index: 3;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
@@ -142,9 +192,20 @@
   to { translate: 10px 14px; scale: 1.08; opacity: 1; }
 }
 
-@keyframes arcade-grid-drift {
-  from { background-position: 0 0, 0 0; }
-  to { background-position: 42px 42px, 42px 42px; }
+@keyframes candy-pattern-drift {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 300px 220px, -300px 220px, 300px -220px; }
+}
+
+@keyframes candy-float {
+  from {
+    translate: 0 -10px;
+    scale: .92;
+  }
+  to {
+    translate: 14px 18px;
+    scale: 1.08;
+  }
 }
 
 @keyframes arcade-light-sweep {
@@ -625,6 +686,7 @@
 @media (prefers-reduced-motion: reduce) {
   .game-arcade-background::before,
   .game-arcade-background::after,
+  .candy-piece,
   .crazy-smile-background span,
   .reference-spin-container::before,
   .game-brand-logo,

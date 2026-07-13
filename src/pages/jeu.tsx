@@ -27,6 +27,12 @@ const prizes: Prize[] = [
 const referenceWheelColors = ['#ec1479', '#050505', '#28aeea', '#ffffff'];
 
 const GOOGLE_MAPS_URL = 'https://g.page/r/CcfZNj_s6Sy7EBM/review';
+const candyAssets = [
+  '/candy/lollipop.png',
+  '/candy/wrapped-candy.png',
+  '/candy/jelly-bean.png',
+  '/candy/bonbon.png',
+];
 
 const ArcadeThreeField = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -232,6 +238,17 @@ const SpinWheel = () => {
     <div className="game-page fixed inset-0 w-screen h-screen overflow-hidden">
       <div className="game-arcade-background" />
       <ArcadeThreeField />
+      <div className="candy-background" aria-hidden="true">
+        {Array.from({ length: 3 }, (_, index) => (
+          <img
+            key={index}
+            className={`candy-piece candy-piece-${(index % 4) + 1}`}
+            src={candyAssets[index % candyAssets.length]}
+            alt=""
+            style={{ '--candy-index': index } as CSSProperties}
+          />
+        ))}
+      </div>
       <div className="crazy-smile-background" aria-hidden="true">
         {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'].map((glyph, index) => (
           <span key={glyph} style={{ '--smile-index': index } as CSSProperties}>{glyph}</span>
