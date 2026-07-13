@@ -218,7 +218,7 @@
 
 .wheel-stage {
   position: absolute;
-  top: 66%;
+  top: 63%;
   left: 0;
   width: 100%;
   height: 440px;
@@ -639,7 +639,7 @@
   .game-brand { top: 12px; }
   .game-brand-logo { width: 155px; }
   .game-brand p { max-width: 390px; margin-top: -10px; font-size: 33px !important; }
-  .wheel-stage { top: 71%; height: min(92vw, 440px); }
+  .wheel-stage { top: 68%; height: min(92vw, 440px); }
 
   .reference-spin-container {
     width: min(92vw, 440px);
